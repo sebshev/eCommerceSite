@@ -26,7 +26,8 @@ namespace eCommerceSite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            
+            // Registers db context to connection
             services.AddDbContext<ProductContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
