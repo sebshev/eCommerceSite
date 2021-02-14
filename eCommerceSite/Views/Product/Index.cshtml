@@ -4,8 +4,29 @@
 }
 
 <h1>Products for Sale</h1>
-@foreach (Product product in Model)
-{
-    <p>@product.Title</p>
-}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">@Html.DisplayNameFor(m => m.Title)</th>
+            <th scope="col">@Html.DisplayNameFor(m => m.Price)</th>
+            <th scope="col">@Html.DisplayNameFor(m => m.Category)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Product p in Model)
+        {
+            <tr>
+                <td>@p.Title</td>
+                <td>@Html.DisplayFor(m => p.Price)</td>
+                <td>@p.Category</td>
+                <td>
+                    <a class="btn btn-secondary" href="">Edit</a>
+                    <a class="btn btn-danger" href="">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 

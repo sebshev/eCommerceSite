@@ -31,6 +31,7 @@ namespace eCommerceSite.Controllers
         public IActionResult Index()
         {
             // get all products from the Db
+            // List<Product> products1 = (from p in _context.Products select p).ToList();
             List<Product> products = _context.Products.ToList();
 
             // send list of products to view to be displayed
