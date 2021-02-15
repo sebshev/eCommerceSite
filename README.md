@@ -1,3 +1,5 @@
+![.NET Core CI](https://github.com/sebshev/eCommerceSite/workflows/.NET%20Core%20CI/badge.svg)
+
 # eCommerce Site
 A basic eCommerce website to demonstrate the use of ASP.NET MVC, source control, and CRUD functionality with an efficient Database.
 
