@@ -26,25 +26,46 @@ namespace eCommerceSite.Controllers
             _context = context;
         }
         /// <summary>
-        /// Displays a view that lists all products
+        /// Displays a view that lists a page of products
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
+            int pageNum = id ?? 1;
+            const int pageSize = 5;
+        
+
+
             // get all products from the Db
-            // List<Product> products1 = (from p in _context.Products select p).ToList();
-            List<Product> products = await _context.Products.ToListAsync();
+            List<Product> products = 
+                await (from p in _context.Products
+                       orderby p.Title ascending
+                       select p)
+                       .Skip(pageSize * (pageNum - 1))
+                       .Take(pageSize)
+                       .ToListAsync();
+            // List<Product> products = await _context.Products.ToListAsync();
 
             // send list of products to view to be displayed
             return View(products);
         }
 
+        /// <summary>
+        /// Displays a view where you can add a product to the catalog/DB
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
 
+        /// <summary>
+        /// The post version of Add that redirects ther user to the catalog 
+        /// with a success message
+        /// </summary>
+        /// <param name="p">The product to be added</param>
+        /// <returns></returns>
         [HttpPost]
         // public IActionResult Add(Product p) { }
         // Using async is much more effecient
@@ -65,6 +86,11 @@ namespace eCommerceSite.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Displays a view to edit selected from the catalog
+        /// </summary>
+        /// <param name="id">The id of the product to be edited</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -78,6 +104,12 @@ namespace eCommerceSite.Controllers
             return View(p);
         }
 
+        /// <summary>
+        /// The post version of Edit that redirects ther user to the catalog 
+        /// with a success message
+        /// </summary>
+        /// <param name="p">The product to be edited</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Edit(Product p)
         {
@@ -95,6 +127,11 @@ namespace eCommerceSite.Controllers
             return View(p);
         }
 
+        /// <summary>
+        /// Displays a view to confirm that the user wants to delete a product from the catalog/DB
+        /// </summary>
+        /// <param name="id">The id of the product to be deleted</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -104,6 +141,12 @@ namespace eCommerceSite.Controllers
             return View(p);
         }
 
+        /// <summary>
+        /// The post version of Delete that redirects ther user to the catalog 
+        /// with a success message
+        /// </summary>
+        /// <param name="id">The id of the product to be deleted</param>
+        /// <returns></returns>
         [HttpPost]
         // Cannot be same name and parameter type
         // So give nickname
