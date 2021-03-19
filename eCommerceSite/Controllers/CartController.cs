@@ -27,7 +27,7 @@ namespace eCommerceSite.Controllers
         /// </summary>
         /// <param name="id">The Id of the product to store</param>
         /// <returns></returns>
-        public async Task<IActionResult> Add(int id) // Id of the product to add
+        public async Task<IActionResult> Add(int id, string prevUrl) // Id of the product to add
         {
             // Get from DB
             Product p = await ProductDb.GetProductAsync(_context, id);
@@ -37,7 +37,7 @@ namespace eCommerceSite.Controllers
             TempData["Message"] = $"{p.Title} added to the cart successfully";
 
             // redirect back to the same page of catalog
-            return RedirectToAction("Index", "Product");
+            return Redirect(prevUrl);
         }
 
         public IActionResult Summary()
