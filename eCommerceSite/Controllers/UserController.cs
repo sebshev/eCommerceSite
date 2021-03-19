@@ -92,5 +92,13 @@ namespace eCommerceSite.Controllers
 
 
         }
+
+        public IActionResult Logout()
+        {
+            // get rid of session data
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
