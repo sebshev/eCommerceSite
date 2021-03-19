@@ -23,7 +23,7 @@ namespace eCommerceSite.Controllers
         }
 
         /// <summary>
-        /// Adds a pproduct to the shopping cart
+        /// Adds a product to the shopping cart
         /// </summary>
         /// <param name="id">The Id of the product to store</param>
         /// <returns></returns>
@@ -31,15 +31,29 @@ namespace eCommerceSite.Controllers
         {
             // Get from DB
             Product p = await ProductDb.GetProductAsync(_context, id);
+            const string CartCookie = "CartCookie";
 
-            // Add product to cart cookie
-            string data = JsonConvert.SerializeObject(p);
+            // get existing cart items
+            string existingItems = _httpContext.HttpContext.Request.Cookies[CartCookie];
+            List<Product> cartProducts = new List<Product>();
+            if (existingItems != null)
+            {
+                cartProducts = JsonConvert.DeserializeObject<List<Product>>(existingItems);
+            }
+
+            //add current product to existing cart
+            cartProducts.Add(p);
+            
+            // Add product list to cart cookie
+            string data = JsonConvert.SerializeObject(cartProducts);
+
             CookieOptions options = new CookieOptions()
             {
                 Expires = DateTime.Now.AddYears(5),
                 Secure = true,
                 IsEssential = true
             };
+            
             _httpContext.HttpContext.Response.Cookies.Append("CartCookie", data, options);
 
             // redirect back to the same page of catalog
