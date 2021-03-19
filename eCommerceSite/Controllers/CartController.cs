@@ -31,44 +31,19 @@ namespace eCommerceSite.Controllers
         {
             // Get from DB
             Product p = await ProductDb.GetProductAsync(_context, id);
-            const string CartCookie = "CartCookie";
 
-            // get existing cart items
-            string existingItems = _httpContext.HttpContext.Request.Cookies[CartCookie];
-            List<Product> cartProducts = new List<Product>();
-            if (existingItems != null)
-            {
-                cartProducts = JsonConvert.DeserializeObject<List<Product>>(existingItems);
-            }
-
-            //add current product to existing cart
-            cartProducts.Add(p);
-            
-            // Add product list to cart cookie
-            string data = JsonConvert.SerializeObject(cartProducts);
-
-            CookieOptions options = new CookieOptions()
-            {
-                Expires = DateTime.Now.AddYears(5),
-                Secure = true,
-                IsEssential = true
-            };
-            
-            _httpContext.HttpContext.Response.Cookies.Append("CartCookie", data, options);
+            CookieHelper.AddProductToCart(_httpContext, p);
 
             // redirect back to the same page of catalog
-
             return RedirectToAction("Index", "Product");
         }
 
         public IActionResult Summary()
         {
             // Display all products in shopping cart cookie
-            string cookieData = _httpContext.HttpContext.Request.Cookies["CartCookie"];
 
-            List<Product> cartProducts = JsonConvert.DeserializeObject<List<Product>>(cookieData);
-
-            return View(cartProducts);
+            List<Product> cartProducts = CookieHelper.GetCartProducts(_httpContext);
+            return base.View(cartProducts);
         }
     }
 }
